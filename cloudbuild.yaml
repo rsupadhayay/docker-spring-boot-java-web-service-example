@@ -30,12 +30,14 @@ steps:
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', '/workspace/accuknox-report.json', 'gs://accuknox-pipeline/accuknox-report.json']
     waitFor: ['accuknox-container-scan']
+    
 
   # Step 6: Print the AccuKnox container scan results
   - name: 'ubuntu'
     entrypoint: 'cat'
     args: ['/workspace/accuknox-report.json']
     waitFor: ['accuknox-container-scan']
+    
 
   # Step 7: Forward the logs to the SaaS platform using curl
   - name: 'gcr.io/cloud-builders/curl'
@@ -46,6 +48,7 @@ steps:
         'curl --location --request POST "https://${_CSPM_URL}/api/v1/artifact/?tenant_id=${_TENANT_ID}&data_type=TR&save_to_s3=false"  --header "Tenant-Id: 2245" --header "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ0NzE1NzIwLCJqdGkiOiJiNzYxNmQ1NmRiZWU0ZWVhYjdiZjc3NDJhNmJkMzVhMCIsImlzcyI6ImNzcG0uZGVtby5hY2N1a25veC5jb20ifQ.ENT7bvSvqmmxsnopOGN4-_aS9XJgtPLY635d16_Tc2B0MOaHIIZUAocPeSZbRXv174tFtkVhWwBLwjiQT9xWT6R2jYIxGK7PkG4EFW_xDMC3M-VNxOQknriWjs4H_9MO2jvnc7ygf-0CSBYxosn5lwMe2rDWWfi3mA7ZullMKMHsaGStVjVO1Qv7TzpucPdAwR4uq49tBm9NRzXu9vNUxkbsEDzFoxpPHnZ7ytcCziwtI1f3dXoDHmuDhQLJewVqyqpbncLGdXXpJE7dB__gtXlnt4gRetrJWtzbG2aUKl-Gh1KYM1WhnoisHyMy7uw26batq3O7dJTvZGRQPBTrUQ" --form "file=@/workspace/accuknox-report.json"'
       ]
     waitFor: ['accuknox-container-scan']
+    id: 'accuknox-container-scan-report-sent'
 
   # Step 8: If there are critical or high vulnerabilities, stop deployment
   - name: 'bash'
@@ -55,7 +58,7 @@ steps:
         '-c',
         'if grep -q "CRITICAL\|HIGH" /workspace/accuknox-report.json; then  echo "critical or high vulnerabilities found in image"; exit 1; else exit 0; fi'
       ]
-    waitFor: ['accuknox-container-scan']
+    waitFor: ['accuknox-container-scan-report-sent']
 
   # Step 9: Apply Kubernetes Configuration
   - name: 'gcr.io/cloud-builders/kubectl'
