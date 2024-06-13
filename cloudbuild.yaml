@@ -46,7 +46,7 @@ steps:
       [
         '-c',
 #        'curl --location --request POST "https://${_CSPM_URL}/api/v1/artifact/?tenant_id=${_TENANT_ID}&data_type=TR&save_to_s3=false"  --header "Tenant-Id: 2245" --header "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ0NzE1NzIwLCJqdGkiOiJiNzYxNmQ1NmRiZWU0ZWVhYjdiZjc3NDJhNmJkMzVhMCIsImlzcyI6ImNzcG0uZGVtby5hY2N1a25veC5jb20ifQ.ENT7bvSvqmmxsnopOGN4-_aS9XJgtPLY635d16_Tc2B0MOaHIIZUAocPeSZbRXv174tFtkVhWwBLwjiQT9xWT6R2jYIxGK7PkG4EFW_xDMC3M-VNxOQknriWjs4H_9MO2jvnc7ygf-0CSBYxosn5lwMe2rDWWfi3mA7ZullMKMHsaGStVjVO1Qv7TzpucPdAwR4uq49tBm9NRzXu9vNUxkbsEDzFoxpPHnZ7ytcCziwtI1f3dXoDHmuDhQLJewVqyqpbncLGdXXpJE7dB__gtXlnt4gRetrJWtzbG2aUKl-Gh1KYM1WhnoisHyMy7uw26batq3O7dJTvZGRQPBTrUQ" --form "file=@/workspace/accuknox-report.json"'
-         'curl --location --request POST "https://${_CSPM_URL}/api/v1/artifact/?tenant_id=${_TENANT_ID}&data_type=TR&save_to_s3=false"  --header "Tenant-Id: 2245" --header "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ0NzE1NzIwLCJqdGkiOiJiNzYxNmQ1NmRiZWU0ZWVhYjdiZjc3NDJhNmJkMzVhMCIsImlzcyI6ImNzcG0uZGVtby5hY2N1a25veC5jb20ifQ.ENT7bvSvqmmxsnopOGN4-_aS9XJgtPLY635d16_Tc2B0MOaHIIZUAocPeSZbRXv174tFtkVhWwBLwjiQT9xWT6R2jYIxGK7PkG4EFW_xDMC3M-VNxOQknriWjs4H_9MO2jvnc7ygf-0CSBYxosn5lwMe2rDWWfi3mA7ZullMKMHsaGStVjVO1Qv7TzpucPdAwR4uq49tBm9NRzXu9vNUxkbsEDzFoxpPHnZ7ytcCziwtI1f3dXoDHmuDhQLJewVqyqpbncLGdXXpJE7dB__gtXlnt4gRetrJWtzbG2aUKl-Gh1KYM1WhnoisHyMy7uw26batq3O7dJTvZGRQPBTrUQ" --form "file=@"/workspace/accuknox-report.json""'
+         'curl --location --request POST "https://${_CSPM_URL}/api/v1/artifact/?tenant_id=${_TENANT_ID}&data_type=TR&save_to_s3=false"  --header "Tenant-Id: 2245" --header "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjM5NzEwLCJqdGkiOiJiNjZlZTkzZTlhZDc0ZTI2YTg5MjFiNGEwNjU4MGMwYyIsImlzcyI6ImNzcG0uZGVtby5hY2N1a25veC5jb20ifQ.Ut1aAuk6JW8Ab2gHmOTD5FljgAF5ZIeBm9ownuqeZSiczplIOsVa2vGIi18yP__XpLsngmQ4lUfxxiNHE6z7A83Rw7hYZr9oDSXY7SToDTFtRHFLdHSiOX_Ivfu2Yss3rY009sTYjV_V1OIVWzCeZFmdfCp4bI9E6tqvkb6allM98N9Ds3Lp48F3XctBnXQ53u0n_-rIBIwhWmoImGwpiSTT7jc15a_l-LsT0vVarZ6nM9slxNIuiS0DLIPitK_QwZvLzgF0w6yeWd74fx8kB3qJgc066M_Bk7qB_KbttUC7T6YY454-_lewQkVeWkj4jJyHzYAo3trrGaXOR2SRZw" --form "file=@"/workspace/accuknox-report.json""'
       ]
     waitFor: ['accuknox-container-scan']
     id: 'accuknox-container-scan-report-sent'
@@ -67,7 +67,7 @@ steps:
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=gke-cluster-gcb-security-bu'
-    waitFor: ['accuknox-container-scan']
+    
 
   # Step 10: Update the Deployment Image
   - name: 'gcr.io/cloud-builders/kubectl'
@@ -81,8 +81,7 @@ steps:
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=gke-cluster-gcb-security-bu'
-    waitFor: ['accuknox-container-scan']
-
+    
 # Push the image to Google Container Registry with the latest tag
 images: [
    'gcr.io/gcb-security-bu/docker-spring-boot-java-web:latest'
