@@ -90,7 +90,7 @@ timeout: '1200s'
 
 # Define substitutions
 substitutions:
-  _IMAGE_URL: 'gcr.io/gcb-security-bu/docker-spring-boot-java-web'
+  _IMAGE_URL: 'gcr.io/gcb-security-bu/docker-spring-boot-java-web:latest'
   _IMAGE_TAG: 'latest'
   _CSPM_URL: 'cspm.demo.accuknox.com'
   _TENANT_ID: '2245'
